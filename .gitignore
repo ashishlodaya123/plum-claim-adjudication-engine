@@ -1,0 +1,23 @@
+# Python
+__pycache__
+*.pyc
+
+# Virtual env
+venv/
+.env
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Build
+frontend/build/
+backend/dist/
+
+# Docker
+*.pid
+data/
+postgres_data/
+minio_data/

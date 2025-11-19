@@ -1,0 +1,47 @@
+[
+  {
+    "test_case_id": "TC001",
+    "description": "Simple approved claim with consultation fee below sub-limit.",
+    "files": ["bill.pdf"],
+    "mock_ocr_output": "Consultation Fee: 800",
+    "mock_extracted_data": {
+      "consultation_fee": 800
+    },
+    "expected_decision": {
+      "decision": "APPROVED",
+      "approved_amount": 720.0,
+      "rejection_reasons": [],
+      "notes": "Copay of 10.0% applied."
+    }
+  },
+  {
+    "test_case_id": "TC002",
+    "description": "Claim with consultation fee exceeding sub-limit.",
+    "files": ["bill.pdf"],
+    "mock_ocr_output": "Consultation Fee: 1200",
+    "mock_extracted_data": {
+      "consultation_fee": 1200
+    },
+    "expected_decision": {
+      "decision": "APPROVED",
+      "approved_amount": 900.0,
+      "rejection_reasons": ["Consultation fee exceeds sub-limit."],
+      "notes": "Consultation fee capped at 1000, Copay of 10.0% applied."
+    }
+  },
+  {
+    "test_case_id": "TC003",
+    "description": "Claim flagged for manual review due to high amount.",
+    "files": ["bill.pdf"],
+    "mock_ocr_output": "Consultation Fee: 60000",
+    "mock_extracted_data": {
+      "consultation_fee": 60000
+    },
+    "expected_decision": {
+      "decision": "MANUAL_REVIEW",
+      "approved_amount": 900.0,
+      "rejection_reasons": ["Consultation fee exceeds sub-limit."],
+      "notes": "Claim flagged for manual review due to high amount., Consultation fee capped at 1000, Copay of 10.0% applied."
+    }
+  }
+]

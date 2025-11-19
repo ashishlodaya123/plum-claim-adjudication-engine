@@ -1,0 +1,15 @@
+{
+  "waiting_periods": {
+    "illness": 30,
+    "maternity": 270
+  },
+  "exclusions": [
+    "cosmetic surgery",
+    "dental"
+  ],
+  "sub_limits": {
+    "consultation_fee": 1000,
+    "room_rent": 5000
+  },
+  "copay": 0.1
+}
