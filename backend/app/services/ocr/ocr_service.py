@@ -7,6 +7,7 @@ import os
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.claims import Document, Extraction
 import uuid
+import tempfile
 
 class OcrService:
     def __init__(self):
@@ -14,6 +15,8 @@ class OcrService:
 
     def preprocess_image(self, image_path):
         image = cv2.imread(image_path)
+        if image is None:
+            return None
         # Grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # Denoise
@@ -23,7 +26,16 @@ class OcrService:
         return thresh
 
     def run_ocr(self, document_path: str):
+        # Check file extension
+        _, ext = os.path.splitext(document_path)
+        if ext.lower() == '.txt':
+            with open(document_path, 'r', encoding='utf-8') as f:
+                return f.read(), 1.0, "text_file"
+
         preprocessed_image = self.preprocess_image(document_path)
+        if preprocessed_image is None:
+             print(f"Warning: Could not read image at {document_path}")
+             return "", 0.0, "error"
 
         # Run EasyOCR
         easyocr_result = self.reader.readtext(preprocessed_image)
@@ -41,7 +53,7 @@ class OcrService:
         documents = await db.execute(Document.__table__.select().where(Document.claim_id == uuid.UUID(claim_id)))
         ocr_results = []
         for doc in documents:
-            local_path = f"/tmp/{doc.filename}"
+            local_path = os.path.join(tempfile.gettempdir(), doc.filename)
 
             minio_service.download_file(doc.storage_path, local_path)
 

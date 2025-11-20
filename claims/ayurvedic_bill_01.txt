@@ -1,0 +1,29 @@
+--------------------------------
+AyurHeal Clinic
+789 Wellness Road, Kochi
+GST No: 32AABCA9876P1Z5
+--------------------------------
+Bill No: AYUR001    Date: 28/10/2024
+
+Patient: Kavita Nair
+Doctor: Vaidya Krishnan
+
+S.No | Particulars              | Sessions | Amount
+--------------------------------------------------
+1    | Panchakarma therapy      |    5     | ₹ 2000
+2    | Abhyanga (Oil massage)   |    5     | ₹ 1000
+3    | Swedana (Steam therapy)  |    5     | ₹ 1000
+4    | Medicines                |    -     | ₹ 1500
+5    | Consultation             |    -     | ₹  500
+--------------------------------------------------
+                           Sub Total: ₹ 6000
+                           GST (18%): ₹ 1080
+--------------------------------------------------
+                           Net Amount: ₹ 7080
+
+Payment Mode: Cash
+Receipt No: CASH123456
+
+[Authorized Signatory]
+[Stamp]
+--------------------------------

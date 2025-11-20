@@ -1,0 +1,11 @@
+--------------------------------
+Aesthetic Center
+--------------------------------
+Date: 2024-05-26
+Patient: Frank Miller
+
+Procedure: Cosmetic Surgery (Nose Job)
+Cost: 45000
+
+Total: 45000
+--------------------------------

@@ -1,0 +1,11 @@
+--------------------------------
+City Pharmacy
+--------------------------------
+Date: 2024-05-21
+Patient: Jane Doe
+
+Medicines:
+- Immunotherapy Injection: 18000
+
+Total: 18000
+--------------------------------

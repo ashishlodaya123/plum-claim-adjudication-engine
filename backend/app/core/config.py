@@ -11,6 +11,6 @@ class Settings(BaseSettings):
     JWT_SECRET: str
 
     class Config:
-        env_file = ".env"
+        env_file = (".env", ".env.local")
 
 settings = Settings()

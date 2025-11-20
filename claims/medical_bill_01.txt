@@ -1,0 +1,32 @@
+--------------------------------
+Apollo Clinic
+123 Medical Street, Bangalore
+GST No: 29AABCA1234P1Z5
+--------------------------------
+Bill No: BIL001        Date: 01/11/2024
+
+Patient Details:
+Name: Rajesh Kumar
+Contact: 9876543210
+Ref. By: Dr. Sharma
+
+PARTICULARS               AMOUNT
+--------------------------------
+Consultation Fee          ₹ 1000
+Diagnostic Tests:
+- CBC                    ₹  500
+- Dengue Test            ₹ 1000
+Medicines                ₹ 1500
+--------------------------------
+Sub Total:               ₹ 4000
+GST (18%):               ₹  720
+--------------------------------
+TOTAL:                   ₹ 4720
+Amount in Words: Four thousand seven hundred twenty rupees only
+
+Payment Mode: UPI
+Transaction ID: UPI1234567890
+
+[Authorized Signatory]
+[Stamp]
+--------------------------------

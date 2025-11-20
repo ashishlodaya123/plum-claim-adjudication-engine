@@ -1,0 +1,28 @@
+--------------------------------
+Dental Care Clinic
+456 Health Avenue, Mumbai
+GST No: 27AACCD1234E1F2
+--------------------------------
+Bill No: DBIL001    Date: 15/10/2024
+
+Patient: Priya Singh
+Doctor: Dr. Patel
+
+S.No | Particulars              | Amount
+----------------------------------------
+1    | Root canal treatment    | ₹ 8000
+2    | X-Ray                   | ₹  500
+3    | Consultation            | ₹  500
+4    | Medicines               | ₹  200
+----------------------------------------
+                    Sub Total: ₹ 9200
+                    GST (18%): ₹ 1656
+----------------------------------------
+                    Net Amount: ₹ 10856
+
+Payment Mode: Card
+Transaction ID: CARD123456789
+
+[Pharmacist Signature]
+[Stamp]
+--------------------------------

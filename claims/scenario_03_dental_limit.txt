@@ -1,0 +1,11 @@
+--------------------------------
+Smile Dental Care
+--------------------------------
+Date: 2024-05-22
+Patient: Bob Smith
+
+Dental Procedures:
+- Root Canal Treatment: 12000
+
+Total: 12000
+--------------------------------

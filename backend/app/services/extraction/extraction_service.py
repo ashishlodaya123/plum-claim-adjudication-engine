@@ -24,8 +24,11 @@ class ExtractionService:
         if medicine_amount_match:
             extracted_fields["medicine_amount"] = {"value": float(medicine_amount_match.group(1)), "confidence": 0.90, "method": "regex"}
 
-        # If deterministic extraction fails for some fields, fallback to LLM
-        if len(extracted_fields) < 3: # Arbitrary threshold
+        # Regex for patient name - REMOVED due to over-capturing (e.g. "Grace Lee Emergency Surgery")
+        # We will rely on the LLM for this as it is context-aware.
+
+        # If deterministic extraction fails for some fields, or if patient_name is missing, fallback to LLM
+        if len(extracted_fields) < 3 or "patient_name" not in extracted_fields:
             llm_extracted_data, llm_confidence = llm_service.extract_with_llm(text, ExtractedClaimData)
             if llm_extracted_data:
                 for key, value in llm_extracted_data.items():

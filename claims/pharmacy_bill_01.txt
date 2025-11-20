@@ -1,0 +1,23 @@
+--------------------------------
+HealthPlus Pharmacy
+Drug License No: DL/12345/2020
+GST No: 29AABCH1234P1Z5
+--------------------------------
+Bill No: PHAR001    Date: 01/11/2024
+
+Patient: Rajesh Kumar
+Doctor: Dr. Sharma
+
+S.No | Medicine Name    | Batch | Exp    | Qty | MRP | Amount
+------------------------------------------------------------
+1    | Paracetamol 650mg| PC123 | 12/2025| 15  |  5  |   75
+2    | Vitamin C 500mg  | VC456 | 06/2025| 10  | 12  |  120
+3    | Ibuprofen 400mg  | IB789 | 03/2026| 10  | 15  |  150
+------------------------------------------------------------
+                           Total: ₹ 345
+                           GST: ₹ 62
+                           Net Amount: ₹ 407
+
+[Pharmacist Signature]
+[Stamp]
+--------------------------------

@@ -1,0 +1,26 @@
+--------------------------------
+MediScan Diagnostics
+NABL Accreditation No: NABL/12345
+--------------------------------
+Patient Name: Rajesh Kumar
+Age/Sex: 35/Male
+Ref. By: Dr. Sharma
+Date: 01/11/2024
+Report ID: REP001
+
+TEST NAME         RESULT    NORMAL RANGE
+-----------------------------------------
+COMPLETE BLOOD COUNT (CBC)
+Hemoglobin        14.5      13-17 g/dL
+WBC Count         7800      4000-11000
+Platelets         250000    150000-450000
+
+DENGUE SEROLOGY
+NS1 Antigen       Negative  Negative
+IgM Antibody      Negative  Negative
+IgG Antibody      Positive  Negative/Positive
+
+Remarks: No evidence of dengue infection
+Pathologist: Dr. Mehta
+[Digital Signature]
+--------------------------------

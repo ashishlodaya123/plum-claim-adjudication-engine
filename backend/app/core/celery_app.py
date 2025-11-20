@@ -9,4 +9,11 @@ celery_app = Celery(
 
 celery_app.conf.update(
     task_track_started=True,
+    # task_routes={
+    #     "app.workers.tasks.process_claim": "main-queue"
+    # },
+    imports=("app.workers.tasks",)
 )
+
+# Auto-discover tasks
+celery_app.autodiscover_tasks(["app.workers"])

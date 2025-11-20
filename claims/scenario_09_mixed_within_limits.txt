@@ -1,0 +1,11 @@
+--------------------------------
+Diagnostic Center & Clinic
+--------------------------------
+Date: 2024-05-28
+Patient: Henry White
+
+Consultation Fee: 1500
+Diagnostic Tests: 5000 (MRI Scan)
+
+Total: 6500
+--------------------------------

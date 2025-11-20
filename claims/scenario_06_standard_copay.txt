@@ -1,0 +1,11 @@
+--------------------------------
+Family Health Center
+--------------------------------
+Date: 2024-05-25
+Patient: Eve Wilson
+
+Consultation Fee: 1000
+Medicines: 2000
+
+Total: 3000
+--------------------------------

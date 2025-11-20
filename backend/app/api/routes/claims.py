@@ -1,12 +1,14 @@
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from typing import List
+from sqlalchemy import select
 import uuid
 import os
+import tempfile
 import aiofiles
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.core.db import get_db
-from app.models.claims import Claim, Document, Decision
+from app.models.claims import Claim, Document, Decision, Extraction
 from app.workers.tasks import process_claim
 from app.services.minio_service import minio_service
 
@@ -23,7 +25,7 @@ async def upload_claim(files: List[UploadFile] = File(...), db: AsyncSession = D
     await db.refresh(new_claim)
 
     # Create a temporary directory to store the uploaded files
-    temp_dir = f"/tmp/{claim_id}"
+    temp_dir = os.path.join(tempfile.gettempdir(), str(claim_id))
     os.makedirs(temp_dir, exist_ok=True)
 
     for file in files:
@@ -72,13 +74,29 @@ async def get_claim_status(claim_id: str, db: AsyncSession = Depends(get_db)):
     if not claim.decision:
         return {"claim_id": str(claim.id), "status": claim.status, "decision": None}
 
+    # Fetch extracted data for patient name and hospital name
+    extractions_result = await db.execute(
+        select(Extraction).join(Document).where(Document.claim_id == uuid.UUID(claim_id))
+    )
+    extractions = extractions_result.scalars().all()
+    
+    extracted_info = {}
+    for extraction in extractions:
+        if extraction.field in ["patient_name", "hospital_name"]:
+            # Use the first found value, or logic to pick the best one
+            if extraction.field not in extracted_info:
+                extracted_info[extraction.field] = extraction.value
+
     return {
         "claim_id": str(claim.id),
+        "status": claim.status,
         "decision": claim.decision.decision,
         "approved_amount": claim.decision.approved_amount,
         "rejection_reasons": claim.decision.rejection_reasons,
         "confidence_score": claim.decision.confidence_score,
-        "notes": claim.decision.notes
+        "notes": claim.decision.notes,
+        "patient_name": extracted_info.get("patient_name"),
+        "hospital_name": extracted_info.get("hospital_name")
     }
 
 @router.get("/jobs/{job_id}")

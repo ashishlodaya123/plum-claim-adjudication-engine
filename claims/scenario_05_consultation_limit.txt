@@ -1,0 +1,11 @@
+--------------------------------
+Specialist Clinic
+Dr. Jones, Neurologist
+--------------------------------
+Date: 2024-05-24
+Patient: Charlie Davis
+
+Consultation Fee: 2500
+
+Total: 2500
+--------------------------------
