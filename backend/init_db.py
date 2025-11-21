@@ -6,20 +6,40 @@ from botocore.client import Config
 from botocore.exceptions import ClientError
 
 # Add the app directory to the Python path
+import asyncio
+import sys
+import os
+import boto3
+from botocore.client import Config
+from botocore.exceptions import ClientError
+
+# Add the app directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'app'))
 
 from app.core.db import engine, Base
 from app.models.claims import Claim, Document, Extraction, Decision, AuditLog
 from app.core.config import settings
 
-async def init_db():
-    print("Creating database tables...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("Database tables created successfully!")
+from tenacity import retry, stop_after_attempt, wait_fixed, before_log
+import logging
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@retry(stop=stop_after_attempt(5), wait=wait_fixed(2))
+async def init_db():
+    logger.info("Creating database tables...")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables created successfully!")
+    except Exception as e:
+        logger.error(f"Error creating database tables: {e}")
+        raise e
+
+@retry(stop=stop_after_attempt(5), wait=wait_fixed(2))
 def init_minio():
-    print("Initializing MinIO bucket...")
+    logger.info("Initializing MinIO bucket...")
     try:
         # Create MinIO client
         minio_client = boto3.client(
@@ -33,24 +53,33 @@ def init_minio():
         # Create bucket if it doesn't exist
         try:
             minio_client.head_bucket(Bucket=settings.MINIO_BUCKET)
-            print(f"Bucket {settings.MINIO_BUCKET} already exists")
+            logger.info(f"Bucket {settings.MINIO_BUCKET} already exists")
         except ClientError as e:
             error_code = int(e.response['Error']['Code'])
             if error_code == 404:
                 # Bucket doesn't exist, create it
                 minio_client.create_bucket(Bucket=settings.MINIO_BUCKET)
-                print(f"Bucket {settings.MINIO_BUCKET} created successfully")
+                logger.info(f"Bucket {settings.MINIO_BUCKET} created successfully")
             else:
                 # Some other error
                 raise e
                 
     except Exception as e:
-        print(f"Error initializing MinIO: {e}")
-        print("MinIO initialization skipped")
+        logger.error(f"Error initializing MinIO: {e}")
+        raise e
 
 if __name__ == "__main__":
     # Initialize database
-    asyncio.run(init_db())
+    try:
+        asyncio.run(init_db())
+    except Exception as e:
+        logger.error(f"Failed to initialize database after retries: {e}")
+        sys.exit(1)
     
     # Initialize MinIO
-    init_minio()
+    try:
+        init_minio()
+    except Exception as e:
+        logger.error(f"Failed to initialize MinIO after retries: {e}")
+        # We might not want to exit here if MinIO is optional, but for now let's be strict
+        sys.exit(1)

@@ -26,3 +26,4 @@ pytest
 httpx
 pytest-asyncio
 asyncpg
+asgiref

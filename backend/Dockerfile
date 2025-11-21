@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim-buster
+FROM python:3.9-slim-bookworm
 
 # Set the working directory to /app
 WORKDIR /app
@@ -10,11 +10,19 @@ COPY . /app
 # Upgrade pip and install base packages
 RUN pip install --upgrade pip
 
+# Install system dependencies for OpenCV, EasyOCR, and Tesseract
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install packages in groups to improve reliability
 RUN pip install --no-cache-dir \
     fastapi uvicorn python-multipart redis psycopg2-binary sqlalchemy alembic \
     pydantic[email] pydantic-settings python-jose[cryptography] passlib[bcrypt] tenacity \
-    python-dotenv aiofiles sentry-sdk httpx asyncpg
+    python-dotenv aiofiles sentry-sdk httpx asyncpg asgiref
 
 RUN pip install --no-cache-dir \
     celery pytesseract opencv-python-headless groq boto3 fastapi-limiter \

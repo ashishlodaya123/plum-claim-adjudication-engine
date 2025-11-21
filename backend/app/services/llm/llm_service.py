@@ -10,6 +10,9 @@ class LLMService:
     def extract_with_llm(self, text: str, schema: BaseModel):
         prompt = f"""
         Extract the following information from the text below.
+        The text is extracted from a medical claim document using OCR and may contain typos or errors (e.g., 'Cliwic' instead of 'Clinic', 'Hospita' instead of 'Hospital').
+        Please correct these errors and infer the correct values based on context where possible.
+        
         Text: {text}
 
         Respond with a JSON object that conforms to the following Pydantic schema:

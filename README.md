@@ -196,6 +196,103 @@ cd backend
 python -m pytest tests/test_claims.py
 ```
 
+## 🏗️ System Architecture
+
+The system follows a modern **Event-Driven Microservices Architecture**, ensuring scalability, fault tolerance, and asynchronous processing.
+
+```mermaid
+graph TD
+    Client[Frontend (React + Vite)] -->|Upload Claim| API[Backend API (FastAPI)]
+    API -->|Save File| MinIO[MinIO Object Storage]
+    API -->|Create Task| Redis[Redis Message Broker]
+    Redis -->|Consume Task| Worker[Celery Worker]
+    
+    subgraph Worker Process
+        Worker -->|1. OCR Extraction| OCR[EasyOCR / Tesseract]
+        Worker -->|2. Data Extraction| LLM[LLM Service (Groq/Llama3)]
+        Worker -->|3. Adjudication| Rules[Rules Engine]
+    end
+    
+    Worker -->|Save Result| DB[(PostgreSQL)]
+    Client -->|Poll Status| API
+    API -->|Fetch Result| DB
+```
+
+### 🔄 Adjudication Decision Flow
+
+The rules engine processes extracted data through a series of strict validation steps:
+
+```mermaid
+graph TD
+    Start([Start Adjudication]) --> CheckMin{Claim > $500?}
+    CheckMin -- No --> RejectMin[REJECT: Below Minimum Amount]
+    CheckMin -- Yes --> CheckPolicy{Policy Active?}
+    
+    CheckPolicy -- No --> RejectPolicy[REJECT: Policy Inactive]
+    CheckPolicy -- Yes --> CheckExclusion{Excluded Category?}
+    
+    CheckExclusion -- Yes --> RejectExcl[REJECT: Excluded Service]
+    CheckExclusion -- No --> CheckLimits{Within Sub-limits?}
+    
+    CheckLimits -- No --> CapAmount[PARTIAL: Cap at Limit]
+    CheckLimits -- Yes --> CalcCopay[Apply 10% Co-pay]
+    
+    CapAmount --> CalcCopay
+    CalcCopay --> CheckFraud{Fraud Risk?}
+    
+    CheckFraud -- High --> Manual[MANUAL REVIEW]
+    CheckFraud -- Low --> Approve[APPROVE CLAIM]
+```
+
+## 🛠️ Technical Stack & Key Decisions
+
+### Frontend (User Experience)
+- **Framework**: React 18 with Vite for lightning-fast builds.
+- **Styling**: Tailwind CSS for utility-first styling, ensuring a responsive and modern design.
+- **Animations**: Framer Motion for fluid, professional UI transitions (e.g., entry animations, hover states).
+- **State Management**: React Hooks (`useState`, `useEffect`) for local state; simplified for this demo but scalable.
+- **Design System**: Custom "Enterprise" theme with deep indigo hues, glassmorphism effects, and premium typography (Outfit/Inter).
+
+### Backend (Core Logic)
+- **API**: FastAPI (Python) for high-performance, async-ready endpoints.
+- **Task Queue**: Celery + Redis for handling long-running OCR and LLM tasks asynchronously. This prevents the API from blocking during file processing.
+- **Storage**: MinIO (S3-compatible) for secure, scalable document storage.
+- **Database**: PostgreSQL with SQLAlchemy (Async) for reliable relational data persistence.
+
+### Intelligence Layer
+- **OCR**: Hybrid pipeline using **EasyOCR** (primary) and **Tesseract** (fallback).
+    - *Optimization*: Images are preprocessed (grayscale, resized) to improve accuracy on handwritten text.
+- **LLM**: Groq (Llama 3) for context-aware extraction. It corrects OCR typos (e.g., "Cliwic" -> "Clinic") and extracts structured data from unstructured text.
+- **Rules Engine**: A deterministic Python-based engine that enforces policy limits, exclusions, and co-pays strictly.
+
+## 🚀 Troubleshooting
+
+### Common Issues
+
+1.  **"Tesseract Not Found" / OCR Errors**
+    *   **Cause**: Missing system dependencies in the Docker container.
+    *   **Fix**: The `Dockerfile` has been updated to install `tesseract-ocr`. Run `docker compose up --build -d` to rebuild.
+
+2.  **Worker Crashes (SIGKILL / OOM)**
+    *   **Cause**: High concurrency or large images exhausting memory.
+    *   **Fix**:
+        *   Concurrency limited to 1 (`--concurrency=1`).
+        *   Images resized to max 1280px.
+        *   Shared memory increased (`shm_size: '2gb'`).
+
+3.  **"Connection Refused" (Redis/DB)**
+    *   **Cause**: Services starting up slower than the backend.
+    *   **Fix**: `init_db.py` includes retry logic (Tenacity) to wait for services to be ready.
+
+## 📚 Documentation
+
+Detailed documentation for each component can be found in the `docs/` folder:
+
+- **[Frontend Walkthrough](docs/DEMO_FRONTEND.md)**: UI components, state, and design choices.
+- **[Backend Architecture](docs/DEMO_BACKEND.md)**: API, Celery, and service orchestration.
+- **[API & Fallbacks](docs/DEMO_API_FALLBACKS.md)**: Error handling, retries, and resilience.
+- **[Future Improvements](docs/DEMO_MISSING_COMPONENTS.md)**: CI/CD, Monitoring, and Security.
+
 ## Troubleshooting
 
 ### Common Issues
