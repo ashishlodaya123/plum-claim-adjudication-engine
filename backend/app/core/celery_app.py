@@ -9,9 +9,9 @@ celery_app = Celery(
 
 celery_app.conf.update(
     task_track_started=True,
-    # task_routes={
-    #     "app.workers.tasks.process_claim": "main-queue"
-    # },
+    task_routes={
+        "app.workers.tasks.process_claim": "main-queue"
+    },
     imports=("app.workers.tasks",)
 )
 

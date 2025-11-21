@@ -11,18 +11,10 @@ services:
       - redis
       - postgres
       - minio
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://plum:plum123@postgres:5432/claims
-      - REDIS_URL=redis://redis:6379/0
-      - MINIO_ENDPOINT=http://minio:9000
-      - MINIO_ACCESS_KEY=admin
-      - MINIO_SECRET_KEY=admin123
-      - MINIO_BUCKET=claims
 
   worker:
     build: ./backend
-    command: celery -A app.core.celery_app worker --loglevel=info --concurrency=1 -n worker1@%h
-    shm_size: '2gb'
+    command: celery -A app.core.celery_app worker --loglevel=info -n worker1@%h
     volumes:
       - ./backend:/app
     env_file:
@@ -30,15 +22,6 @@ services:
     depends_on:
       - redis
       - fastapi
-      - postgres
-      - minio
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://plum:plum123@postgres:5432/claims
-      - REDIS_URL=redis://redis:6379/0
-      - MINIO_ENDPOINT=http://minio:9000
-      - MINIO_ACCESS_KEY=admin
-      - MINIO_SECRET_KEY=admin123
-      - MINIO_BUCKET=claims
 
   redis:
     image: redis:6.2-alpine

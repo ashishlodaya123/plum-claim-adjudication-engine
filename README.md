@@ -202,18 +202,18 @@ The system follows a modern **Event-Driven Microservices Architecture**, ensurin
 
 ```mermaid
 graph TD
-    Client[Frontend (React + Vite)] -->|Upload Claim| API[Backend API (FastAPI)]
-    API -->|Save File| MinIO[MinIO Object Storage]
-    API -->|Create Task| Redis[Redis Message Broker]
-    Redis -->|Consume Task| Worker[Celery Worker]
+    Client["Frontend (React + Vite)"] -->|Upload Claim| API["Backend API (FastAPI)"]
+    API -->|Save File| MinIO["MinIO Object Storage"]
+    API -->|Create Task| Redis["Redis Message Broker"]
+    Redis -->|Consume Task| Worker["Celery Worker"]
     
     subgraph Worker Process
-        Worker -->|1. OCR Extraction| OCR[EasyOCR / Tesseract]
-        Worker -->|2. Data Extraction| LLM[LLM Service (Groq/Llama3)]
-        Worker -->|3. Adjudication| Rules[Rules Engine]
+        Worker -->|1. OCR Extraction| OCR["EasyOCR / Tesseract"]
+        Worker -->|2. Data Extraction| LLM["LLM Service (Groq/Llama3)"]
+        Worker -->|3. Adjudication| Rules["Rules Engine"]
     end
     
-    Worker -->|Save Result| DB[(PostgreSQL)]
+    Worker -->|Save Result| DB[("PostgreSQL")]
     Client -->|Poll Status| API
     API -->|Fetch Result| DB
 ```
@@ -224,24 +224,24 @@ The rules engine processes extracted data through a series of strict validation 
 
 ```mermaid
 graph TD
-    Start([Start Adjudication]) --> CheckMin{Claim > $500?}
-    CheckMin -- No --> RejectMin[REJECT: Below Minimum Amount]
-    CheckMin -- Yes --> CheckPolicy{Policy Active?}
+    Start([Start Adjudication]) --> CheckMin{"Claim > $500?"}
+    CheckMin -- No --> RejectMin["REJECT: Below Minimum Amount"]
+    CheckMin -- Yes --> CheckPolicy{"Policy Active?"}
     
-    CheckPolicy -- No --> RejectPolicy[REJECT: Policy Inactive]
-    CheckPolicy -- Yes --> CheckExclusion{Excluded Category?}
+    CheckPolicy -- No --> RejectPolicy["REJECT: Policy Inactive"]
+    CheckPolicy -- Yes --> CheckExclusion{"Excluded Category?"}
     
-    CheckExclusion -- Yes --> RejectExcl[REJECT: Excluded Service]
-    CheckExclusion -- No --> CheckLimits{Within Sub-limits?}
+    CheckExclusion -- Yes --> RejectExcl["REJECT: Excluded Service"]
+    CheckExclusion -- No --> CheckLimits{"Within Sub-limits?"}
     
-    CheckLimits -- No --> CapAmount[PARTIAL: Cap at Limit]
-    CheckLimits -- Yes --> CalcCopay[Apply 10% Co-pay]
+    CheckLimits -- No --> CapAmount["PARTIAL: Cap at Limit"]
+    CheckLimits -- Yes --> CalcCopay["Apply 10% Co-pay"]
     
     CapAmount --> CalcCopay
-    CalcCopay --> CheckFraud{Fraud Risk?}
+    CalcCopay --> CheckFraud{"Fraud Risk?"}
     
-    CheckFraud -- High --> Manual[MANUAL REVIEW]
-    CheckFraud -- Low --> Approve[APPROVE CLAIM]
+    CheckFraud -- High --> Manual["MANUAL REVIEW"]
+    CheckFraud -- Low --> Approve["APPROVE CLAIM"]
 ```
 
 ## 🛠️ Technical Stack & Key Decisions
@@ -292,6 +292,14 @@ Detailed documentation for each component can be found in the `docs/` folder:
 - **[Backend Architecture](docs/DEMO_BACKEND.md)**: API, Celery, and service orchestration.
 - **[API & Fallbacks](docs/DEMO_API_FALLBACKS.md)**: Error handling, retries, and resilience.
 - **[Future Improvements](docs/DEMO_MISSING_COMPONENTS.md)**: CI/CD, Monitoring, and Security.
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)**: Instructions for local demo (ngrok) and cloud deployment (AWS/VPS).
+
+## 🌐 Live Demo
+
+> **Note for Evaluators:** Due to the complex microservices architecture (FastAPI, Celery, Redis, Postgres, MinIO), this application is best viewed via the **Demo Video** or by running it locally using Docker Compose.
+
+-   **Demo Video**: [Link to your video]
+-   **Deployed URL**: [Link to your deployed instance, if applicable]
 
 ## Troubleshooting
 
