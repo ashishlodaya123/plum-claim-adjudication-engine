@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { ShieldCheck, AlertTriangle, FileText, Settings, Activity, BarChart2 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
 
 interface PolicyTerms {
     claim_requirements: {
@@ -22,7 +22,7 @@ interface MetricPoint {
     latency: number;
 }
 
-const COLORS = ['#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isActive }) => {
     const [stats, setStats] = useState({
@@ -47,7 +47,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isActive }) => {
     const [activeTab, setActiveTab] = useState<'overview' | 'metrics'>('overview');
     const [metricsHistory, setMetricsHistory] = useState<MetricPoint[]>([]);
     const [currentMetrics, setCurrentMetrics] = useState<any>(null);
-    const [statusData, setStatusData] = useState<any[]>([]);
+
     const [endpointData, setEndpointData] = useState<any[]>([]);
 
     const handleLogin = (e: React.FormEvent) => {
@@ -119,9 +119,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isActive }) => {
                     return newHistory;
                 });
 
-                // Update Status Distribution
-                const sData = Object.entries(data.status_distribution || {}).map(([name, value]) => ({ name, value }));
-                setStatusData(sData);
+
 
                 // Update Endpoint Usage
                 const eData = Object.entries(data.endpoint_usage || {}).map(([name, value]) => ({ name, value }));

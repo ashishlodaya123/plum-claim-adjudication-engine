@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, ShieldCheck, Activity, Database, Server, Cpu } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Activity, Database, Server, Cpu } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 interface DocumentationProps {

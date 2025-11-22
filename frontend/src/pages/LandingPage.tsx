@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, FileText, ShieldCheck, ArrowRight, Activity, CheckCircle, BarChart3, Lock } from 'lucide-react';
+import { Zap, ShieldCheck, ArrowRight, Activity, CheckCircle, BarChart3, Lock } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 interface LandingPageProps {
