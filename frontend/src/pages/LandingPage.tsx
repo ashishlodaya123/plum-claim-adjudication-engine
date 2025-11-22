@@ -5,9 +5,10 @@ import { Button } from '../components/ui/Button';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  onViewDocs: () => void;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onViewDocs }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -86,6 +87,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               <Button 
                 variant="outline" 
                 size="lg" 
+                onClick={onViewDocs}
                 className="h-14 px-8 text-lg rounded-full border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900"
               >
                 View Documentation

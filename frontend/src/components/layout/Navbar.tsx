@@ -3,8 +3,8 @@ import { ShieldCheck } from 'lucide-react';
 import { Button } from '../ui/Button';
 
 interface NavbarProps {
-  onNavigate: (page: 'landing' | 'dashboard') => void;
-  currentPage: 'landing' | 'dashboard';
+  onNavigate: (page: 'landing' | 'dashboard' | 'admin' | 'manual_review' | 'documentation') => void;
+  currentPage: 'landing' | 'dashboard' | 'admin' | 'manual_review' | 'documentation';
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
@@ -19,7 +19,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
           {currentPage === 'landing' ? (
             <Button onClick={() => onNavigate('dashboard')}>Launch App</Button>
           ) : (
-            <Button variant="ghost" onClick={() => onNavigate('landing')}>Home</Button>
+            <>
+                <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Dashboard</Button>
+                <Button variant="ghost" onClick={() => onNavigate('manual_review')}>Review Queue</Button>
+                <Button variant="ghost" onClick={() => onNavigate('admin')}>Admin</Button>
+            </>
           )}
         </div>
       </div>

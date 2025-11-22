@@ -1,0 +1,11 @@
+--------------------------------
+General Clinic
+--------------------------------
+Date: 2024-11-21
+Patient: John Doe
+
+Treatment: Unspecified Surgical Procedure
+Cost: 60000
+
+Total: 60000
+--------------------------------

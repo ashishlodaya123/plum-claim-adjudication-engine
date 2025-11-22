@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     DATABASE_URL: str
@@ -10,7 +10,6 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str
     JWT_SECRET: str
 
-    class Config:
-        env_file = (".env", ".env.local")
+    model_config = SettingsConfigDict(env_file=(".env", ".env.local"))
 
 settings = Settings()

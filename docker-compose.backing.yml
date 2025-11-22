@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data_local:/data
+
+  postgres:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=plum
+      - POSTGRES_PASSWORD=plum123
+      - POSTGRES_DB=claims
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data/
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=admin123
+    volumes:
+      - minio_data_local:/data
+    command: server /data --console-address ":9001"
+
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana:8.5.2
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data_local:
+  minio_data_local:
+  redis_data_local:

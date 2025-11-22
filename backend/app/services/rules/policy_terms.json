@@ -13,7 +13,7 @@
     "family_floater_limit": 150000,
     "consultation_fees": {
       "covered": true,
-      "sub_limit": 2000,
+      "sub_limit": 1000,
       "copay_percentage": 10,
       "network_discount": 20
     },

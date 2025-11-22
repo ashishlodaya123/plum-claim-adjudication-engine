@@ -1,28 +1,72 @@
-# PlumHQ Automated Medical Claim Adjudication System
 
-## Overview
 
-This project is a full-stack, production-grade automated medical claim adjudication system. It automates the process of extracting information from uploaded medical documents, validating the claims against a set of rules, and making a decision (Approved, Partially Approved, Rejected, or Manual Review). The system is designed to be highly accurate, reliable, transparent, and explainable.
+## 🚀 Overview
 
-## Architecture Diagram
+This engine automates the processing of health insurance claims, using a rule-based engine for policy validation and an LLM (Large Language Model) for interpreting complex medical documents. It features a modern Admin Dashboard for real-time monitoring and manual review of flagged claims.
 
-The system follows a microservices-based architecture, orchestrated using Docker Compose.
+- **Main Adjudication Dashboard Overview**:![Dashboard Overview](img/Main_dashboard.png)
 
-- **Frontend:** A React (TypeScript) single-page application for users to upload claim documents and view the status and decision of their claims.
-- **Backend:** A FastAPI application that exposes a RESTful API for claim submission and status retrieval.
-- **Background Worker:** A Celery worker that processes the claims asynchronously. The pipeline includes an OCR stage, an extraction stage, and a rule engine stage.
-- **Message Broker:** Redis is used as the message broker for Celery.
-- **Database:** PostgreSQL is used to store claim data, document metadata, extracted information, and decisions.
-- **Object Storage:** MinIO is used to store the uploaded claim documents and the intermediate OCR outputs.
-- **Monitoring:** Prometheus is used to scrape metrics from the FastAPI application, and Grafana is used for visualization and dashboards.
+## ✨ Key Features
 
-## Key Features
-- **Automated Document Extraction**: Uses OCR (EasyOCR) and LLMs (Groq) to extract key data fields like patient name, hospital, diagnosis, and itemized costs from medical bills and prescriptions.
-- **Comprehensive Rules Engine**: Implements a robust set of adjudication rules based on policy terms:
-    - **Sub-limits**: Enforces category-specific limits (e.g., Pharmacy: ₹15,000, Vision: ₹5,000).
-    - **Co-pay**: Automatically calculates and deducts a 10% co-pay.
-    - **Exclusions**: Flags excluded categories (e.g., Cosmetic Surgery).
-    - **Fraud Detection**: Flags high-value claims (> ₹50,000) and round-number amounts for manual review.
+### 1. Automated Adjudication
+*   **Rule Engine**: Validates claims against policy terms (min/max amounts, exclusions).
+*   **AI Analysis**: Uses LLMs to extract and verify diagnosis codes (ICD-10) and treatment details from medical documents.
+*   **Instant Decisions**: Automatically approves or rejects clear-cut cases.
+
+### 2. Manual Review Workflow
+*   **Human-in-the-Loop**: Flagged claims (e.g., low confidence, high value) are routed to a review queue.
+*   **Decision Support**: Reviewers see a side-by-side view of the claim data and the AI's analysis.
+*   **One-Click Actions**: Approve or reject claims directly from the UI.
+
+### 3. System Metrics Dashboard
+*   **Real-Time Monitoring**: Track total request volume, API latency, and active requests.
+*   **Traffic Analysis**: Visualize response status codes (2xx, 4xx, 5xx) and top API endpoints.
+*   **Live Charts**: Dynamic charts powered by Recharts for instant visibility into system health.
+
+![System Metrics](img/Metrics.png)
+
+## 🛠️ Tech Stack
+
+*   **Backend**: Python, FastAPI, Prometheus (Metrics), Celery (Async Tasks)
+*   **Frontend**: React, TypeScript, Tailwind CSS, Recharts
+*   **AI/ML**: Groq API (LLM), OCR for document processing
+*   **Infrastructure**: Docker, Redis (Caching/Queue)
+
+## 🏁 Quick Start
+
+### Prerequisites
+*   Python 3.10+
+*   Node.js 18+
+*   Redis (Local or Docker)
+
+### Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm start
+```
+
+## 📸 Screenshots
+
+### Admin Dashboard
+![Admin Dashboard](img/AdminPanel.png)
+
+### Manual Review Interface
+![Manual Review](img/Review_page.png)
+- **Admin Dashboard**:
+  - **Authentication**: Secure login (`admin`/`admin123`).
+  - **Policy Management**: View and edit policy rules (JSON) in real-time.
+  - **System Metrics**: Live dashboard showing Request Volume and API Latency (powered by Prometheus & Recharts).
+  - **Overview Stats**: Approval rates, total claims, and AI confidence metrics.
 - **Real-time Dashboard**: A modern, responsive React UI to upload claims, view processing status in real-time, and see detailed adjudication results including approved amounts and rejection reasons.
 - **Transparent Decisioning**: Provides clear reasons for every rejection or partial approval, along with a confidence score for the AI's extraction.
 
@@ -200,49 +244,13 @@ python -m pytest tests/test_claims.py
 
 The system follows a modern **Event-Driven Microservices Architecture**, ensuring scalability, fault tolerance, and asynchronous processing.
 
-```mermaid
-graph TD
-    Client["Frontend (React + Vite)"] -->|Upload Claim| API["Backend API (FastAPI)"]
-    API -->|Save File| MinIO["MinIO Object Storage"]
-    API -->|Create Task| Redis["Redis Message Broker"]
-    Redis -->|Consume Task| Worker["Celery Worker"]
-    
-    subgraph Worker Process
-        Worker -->|1. OCR Extraction| OCR["EasyOCR / Tesseract"]
-        Worker -->|2. Data Extraction| LLM["LLM Service (Groq/Llama3)"]
-        Worker -->|3. Adjudication| Rules["Rules Engine"]
-    end
-    
-    Worker -->|Save Result| DB[("PostgreSQL")]
-    Client -->|Poll Status| API
-    API -->|Fetch Result| DB
-```
+![System Architecture](img/Architecture_Diagram.png)
 
 ### 🔄 Adjudication Decision Flow
 
 The rules engine processes extracted data through a series of strict validation steps:
 
-```mermaid
-graph TD
-    Start([Start Adjudication]) --> CheckMin{"Claim > $500?"}
-    CheckMin -- No --> RejectMin["REJECT: Below Minimum Amount"]
-    CheckMin -- Yes --> CheckPolicy{"Policy Active?"}
-    
-    CheckPolicy -- No --> RejectPolicy["REJECT: Policy Inactive"]
-    CheckPolicy -- Yes --> CheckExclusion{"Excluded Category?"}
-    
-    CheckExclusion -- Yes --> RejectExcl["REJECT: Excluded Service"]
-    CheckExclusion -- No --> CheckLimits{"Within Sub-limits?"}
-    
-    CheckLimits -- No --> CapAmount["PARTIAL: Cap at Limit"]
-    CheckLimits -- Yes --> CalcCopay["Apply 10% Co-pay"]
-    
-    CapAmount --> CalcCopay
-    CalcCopay --> CheckFraud{"Fraud Risk?"}
-    
-    CheckFraud -- High --> Manual["MANUAL REVIEW"]
-    CheckFraud -- Low --> Approve["APPROVE CLAIM"]
-```
+![Adjudication Decision Flow](img/Adjudication_Flow.png)
 
 ## 🛠️ Technical Stack & Key Decisions
 
@@ -296,10 +304,10 @@ Detailed documentation for each component can be found in the `docs/` folder:
 
 ## 🌐 Live Demo
 
-> **Note for Evaluators:** Due to the complex microservices architecture (FastAPI, Celery, Redis, Postgres, MinIO), this application is best viewed via the **Demo Video** or by running it locally using Docker Compose.
+> **Note:** Due to the complex microservices architecture (FastAPI, Celery, Redis, Postgres, MinIO), this application is best viewed via the **Demo Video** or by running it locally using Docker Compose.
 
--   **Demo Video**: [Link to your video]
--   **Deployed URL**: [Link to your deployed instance, if applicable]
+-   **Demo Video**: [[Link to the demo video](https://go.screenpal.com/watch/cTX3oQnqr27)]
+
 
 ## Troubleshooting
 
@@ -337,5 +345,9 @@ Detailed documentation for each component can be found in the `docs/` folder:
 
 ## Assumptions
 
-- The uploaded documents are in English.
-- The `GROQ_API_KEY` is provided in the `.env` file.
+- **Document Language**: The system is optimized for English-language medical documents.
+- **Currency**: All monetary values are processed in INR (₹) or USD ($) as per the policy configuration.
+- **Policy Structure**: The system assumes a specific JSON structure for policy terms (as defined in `policy_terms.json`).
+- **LLM Availability**: The system relies on the Groq API being available; a fallback to regex is implemented but less accurate.
+- **Document Quality**: It is assumed that uploaded images have sufficient resolution (minimum 300 DPI recommended) for OCR to work effectively.
+- **Single Claim per File**: The current iteration assumes one claim per uploaded document file.

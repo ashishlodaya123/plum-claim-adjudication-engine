@@ -114,7 +114,7 @@ export const Dashboard: React.FC = () => {
         const currentStatus = response.data.status;
         setStatus(currentStatus);
 
-        const terminalStatuses = ['APPROVED', 'REJECTED', 'MANUAL_REVIEW', 'FAILED'];
+        const terminalStatuses = ['APPROVED', 'REJECTED', 'NEEDS_REVIEW', 'MANUAL_REVIEW', 'FAILED'];
 
         if (terminalStatuses.includes(currentStatus)) {
           clearInterval(interval);

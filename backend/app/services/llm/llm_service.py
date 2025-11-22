@@ -15,7 +15,13 @@ class LLMService:
         
         Text: {text}
 
-        Respond with a JSON object that conforms to the following Pydantic schema:
+        Respond with a JSON object that conforms to the following structure:
+        {{
+            "data": <extracted_data_conforming_to_schema>,
+            "confidence_score": <float_between_0.0_and_1.0_indicating_confidence_in_extraction>
+        }}
+
+        Schema for "data":
         {schema.schema_json(indent=2)}
         """
 
@@ -32,8 +38,18 @@ class LLMService:
                 response_format={"type": "json_object"},
             )
             response_json = json.loads(chat_completion.choices[0].message.content)
-            validated_data = schema(**response_json)
-            return validated_data.dict(), 1.0 # High confidence for successful LLM extraction
+            
+            # Handle potential variations in LLM response structure
+            if "data" in response_json:
+                data_json = response_json["data"]
+                confidence = response_json.get("confidence_score", 0.5)
+            else:
+                # Fallback if LLM doesn't follow the wrapper structure strictly
+                data_json = response_json
+                confidence = 0.5
+
+            validated_data = schema(**data_json)
+            return validated_data.dict(), float(confidence)
         except (json.JSONDecodeError, ValidationError) as e:
             print(f"Error in LLM extraction: {e}")
             return None, 0.0

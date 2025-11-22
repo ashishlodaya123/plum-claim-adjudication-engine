@@ -1,0 +1,12 @@
+--------------------------------
+City Super Specialty Hospital
+--------------------------------
+Date: 2024-11-20
+Patient: Sarah Connor
+
+Procedure: Complex Spinal Reconstruction
+Cost: 150000
+
+Total: 150000
+--------------------------------
+Notes: Emergency procedure following accident.

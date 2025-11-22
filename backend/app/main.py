@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import claims
+from app.api.routes import claims, metrics
 from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
@@ -18,6 +18,7 @@ app.add_middleware(
 Instrumentator().instrument(app).expose(app)
 
 app.include_router(claims.router, prefix="/claims", tags=["claims"])
+app.include_router(metrics.router, prefix="/admin", tags=["admin"])
 
 @app.get("/")
 async def root():
