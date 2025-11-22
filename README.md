@@ -89,8 +89,8 @@ npm start
 1.  **Clone the repository:**
 
     ```bash
-    git clone <repository_url>
-    cd <repository_name>
+    git clone https://github.com/ashishlodaya123/plum-claim-adjudication-engine
+    cd plum-claim-adjudication-engine
     ```
 
 2.  **Create a `.env` file:**
@@ -128,8 +128,8 @@ The application will be available at the following URLs:
 1.  **Clone the repository:**
 
     ```bash
-    git clone <repository_url>
-    cd <repository_name>
+    git clone https://github.com/ashishlodaya123/plum-claim-adjudication-engine
+    cd plum-claim-adjudication-engine
     ```
 
 2.  **Set up the backend:**
@@ -239,6 +239,17 @@ Or, for manual setup:
 cd backend
 python -m pytest tests/test_claims.py
 ```
+
+## 🔄 CI/CD Pipeline
+
+This project uses **GitHub Actions** for continuous integration and deployment:
+
+*   **Backend CI**: Runs on every push/PR to validate Python code quality and run pytest tests.
+*   **Frontend CI**: Lints TypeScript code and builds the React app to catch errors early.
+*   **Automated Checks**: Both pipelines must pass before merging to ensure code quality.
+
+The CI configuration can be found in `.github/workflows/`.
+
 
 ## 🏗️ System Architecture
 
