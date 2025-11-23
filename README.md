@@ -318,6 +318,7 @@ Detailed documentation for each component can be found in the `docs/` folder:
 > **Note:** Due to the complex microservices architecture (FastAPI, Celery, Redis, Postgres, MinIO), this application is best viewed via the **Demo Video** or by running it locally using Docker Compose.
 
 -   **Demo Video**: [[Link to the demo video](https://go.screenpal.com/watch/cTX3oQnqr27)]
+-   **Demo Video with explanation**: [[Link to the demo video](https://go.screenpal.com/watch/cTX0hBnq36I)]
 
 
 ## Troubleshooting
